@@ -3,7 +3,7 @@ package main
 import (
 	"crypto/rand"
 	"encoding/base64"
-	"log"
+	"fmt"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -18,10 +18,11 @@ func checkPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
-func generateToken(length int) string {
+func generateToken(length int) (string, error) {
 	bytes := make([]byte, length)
+	fmt.Print(bytes)
 	if _, err := rand.Read(bytes); err != nil {
-		log.Fatalf("Failed to generate token: %v", err)
+		return "", fmt.Errorf("failed to generate token: %w", err)
 	}
-	return base64.URLEncoding.EncodeToString(bytes)
+	return base64.URLEncoding.EncodeToString(bytes), nil
 }

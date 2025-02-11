@@ -71,8 +71,17 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sessionToken := generateToken(32)
-	csrfToken := generateToken(32)
+	sessionToken, err := generateToken(32)
+	if err != nil {
+		http.Error(w, "Failed to generate session token", http.StatusInternalServerError)
+		return
+	}
+
+	csrfToken, err := generateToken(32)
+	if err != nil {
+		http.Error(w, "Failed to generate CSRF token", http.StatusInternalServerError)
+		return
+	}
 
 	http.SetCookie(w, &http.Cookie{
 		Name:     "session_token",
@@ -89,6 +98,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	})
 
 	user.SessionToken = sessionToken
+	user.CRSFToken = csrfToken
 	users[username] = user
 
 	fmt.Fprintln(w, "Login successful!")
