@@ -18,11 +18,12 @@ func checkPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
-func generateToken(length int) (string, error) {
-	bytes := make([]byte, length)
-	fmt.Print(bytes)
-	if _, err := rand.Read(bytes); err != nil {
-		return "", fmt.Errorf("failed to generate token: %w", err)
+func generateToken(username string, length int) (string, error) {
+	b := make([]byte, length)
+	_, err := rand.Read(b)
+	if err != nil {
+		return "", err
 	}
-	return base64.URLEncoding.EncodeToString(bytes), nil
+	token := base64.URLEncoding.EncodeToString(b)
+	return fmt.Sprintf("%s:%s", token, username), nil
 }
