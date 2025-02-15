@@ -1,0 +1,7 @@
+CREATE TABLE tokens (
+    id SERIAL PRIMARY KEY,
+    token TEXT NOT NULL UNIQUE,
+    csrf_token TEXT NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE
+);
