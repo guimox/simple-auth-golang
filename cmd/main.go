@@ -8,25 +8,18 @@ import (
 )
 
 func main() {
-	// Load configuration
 	cfg := config.LoadConfig()
 
-	// Initialize database
 	db.InitDB(cfg.DatabaseURL)
-	defer db.DB.Close() // Ensure the database connection is closed when the program exits
+	defer db.DB.Close()
 
-	// Initialize repositories
 	repos := config.InitializeRepositories()
 
-	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(repos.UserRepo, repos.TokenRepo)
 
-	// Initialize middleware
 	authMiddleware := middleware.NewAuthMiddleware(repos.TokenRepo)
 
-	// Setup routes
 	router := config.SetupRoutes(authHandler, authMiddleware)
 
-	// Start server
 	config.StartServer(cfg.ServerPort, router)
 }
