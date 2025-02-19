@@ -16,7 +16,9 @@ func main() {
 	repos := config.InitializeRepositories()
 
 	authHandler := handlers.NewAuthHandler(repos.UserRepo, repos.TokenRepo)
+
 	authMiddleware := middleware.NewAuthMiddleware(repos.TokenRepo)
+
 	router := config.SetupRoutes(authHandler, authMiddleware)
 
 	config.StartServer(cfg.ServerPort, router)
